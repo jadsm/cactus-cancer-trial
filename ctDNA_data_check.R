@@ -116,7 +116,7 @@ sum(orig.df$LLOD[orig.df$Visit!="Screening"]=="<LLOD")
 
 # lets do a histogram of all the red samples
 pdf("Subfig1B.pdf", width = 8, height = 6)
-ggplot(unique(orig.df[orig.df$Red=="Yes",c("PID","Working days from Receipt to report")]),
+plt<-ggplot(unique(orig.df[orig.df$Red=="Yes",c("PID","Working days from Receipt to report")]),
        aes(x=`Working days from Receipt to report`)) + 
   geom_histogram(stat="count",fill="blue",alpha=0.3)+
   xlab("Days to return ctDNA result")+theme_bw(base_size=14)+
@@ -124,6 +124,7 @@ ggplot(unique(orig.df[orig.df$Red=="Yes",c("PID","Working days from Receipt to r
 
 orig.df<-arrange(orig.df,PID,`Sample Date`)
 dev.off()
+write.csv(plt$data, "data/data_SupFig1B.csv", row.names = FALSE)
 
 
 
@@ -301,7 +302,7 @@ dummy_last_point <- dummy %>%
   ungroup() # Don't forget to ungroup if you're doing further operations
 
 pdf("fig1C.pdf", width = 8, height = 6)
-ggplot(dummy,
+plt<-ggplot(dummy,
        aes(Days2,PCHG,group=PID,col=Firstlinetreatment))+
   geom_line(alpha=0.5)+facet_wrap(~Firstlinetreatment)+
   geom_point(data = dummy_last_point, aes(Days2, PCHG, col = Firstlinetreatment), size = 1, shape = 19) +
@@ -314,6 +315,8 @@ ggplot(dummy,
   scale_color_manual(values = c("TT" = "#087383", "CPI" = "#F37B6A"))+
   theme(legend.position = "none")
 dev.off()
+write.csv(plt$data, "data/data_Fig1C.csv", row.names = FALSE)
+
 
 orig.df$PID<-as.numeric(orig.df$PID)
 orig.df<-arrange(orig.df,PID,Days2)
@@ -677,7 +680,7 @@ dummy$Treatment[dummy$PID==1][c(8,9)]<-"Off"
 dummy$Treatment[dummy$PID==19][c(13)]<-"Off"
 
 pdf("Subfig3A1.pdf", width = 20, height = 2.1)
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM A" ,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM A" ,],
                    aes(Days2,`Percentage Mutant VAF`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM A" ,],
              aes(Days2,`Percentage Mutant VAF`,group=PID))+
@@ -697,9 +700,11 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig
   theme(legend.position = "none")+
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383", Off=NA))
 dev.off()
+write.csv(orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM A" ,], "data/data_SupFig3A1.csv", row.names = FALSE)
+
 
 pdf("Fig3A1.pdf", width = 20, height = 2.1)
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" ,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" ,],
                    aes(Days2,`Percentage Mutant VAF`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" ,],
              aes(Days2,`Percentage Mutant VAF`,group=PID))+
@@ -719,6 +724,8 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig
   theme(legend.position = "none")+
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383", Off=NA))
 dev.off()
+write.csv(orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" ,], "data/data_Fig3A1.csv", row.names = FALSE)
+
 # for Supp table 10
 df_filtered_dplyr <- orig.df %>%
   filter(PID == "14") %>% # Keep only rows where PID is "P12"
@@ -829,8 +836,8 @@ write.csv(df_final_output, file = "values_days.csv", row.names = FALSE)
 #   theme(legend.position = "none")+
 #   scale_fill_manual(values=c(IO="red",Targeted="blue"))
 
-pdf("Subfiig3A2.pdf", width = 20, height = 2.1)
-ggplot()+geom_line(data=orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM A" ,],
+pdf("figures/Subfig3A2.pdf", width = 20, height = 2.1)
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM A" ,],
                    aes(Days2,SUM,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM A" ,],
              aes(Days2,SUM,group=PID))+
@@ -850,9 +857,11 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM A" ,],
   theme(legend.position = "none")+
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383"))
 dev.off()
+write.csv(orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM A" ,], "data/data_SupFig3A2.csv", row.names = FALSE)
+
 
 pdf("Fig3A2.pdf", width = 20, height = 2.1)
-ggplot()+geom_line(data=orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM B" ,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM B" ,],
                    aes(Days2,SUM,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM B" ,],
              aes(Days2,SUM,group=PID))+
@@ -872,6 +881,8 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM B" ,],
   theme(legend.position = "none")+
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383"))
 dev.off()
+
+write.csv(orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM B" ,], "data/data_Fig3A2.csv", row.names = FALSE)
 # ggplot()+geom_line(data=orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM A" & orig.df$PID<10,],
 #                    aes(Days2,SUM,group=PID))+
 #   geom_point(data=orig.df[is.na(orig.df$SUM)==F & orig.df$ARM=="ARM A" & orig.df$PID<10,],
@@ -911,7 +922,7 @@ dev.off()
 
 orig.df$`LDH result`<-as.numeric(orig.df$`LDH result`)
 pdf("Subfig3A3.pdf", width = 20, height = 2.1)
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="ARM A",],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="ARM A",],
                    aes(Days2,`LDH result`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="ARM A",],
              aes(Days2,`LDH result`,group=PID))+
@@ -932,8 +943,10 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="A
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383"))
 dev.off()
 
+write.csv(orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="ARM A",], "data/data_SupFig3A3.csv", row.names = FALSE)
+
 pdf("fig3A3.pdf", width = 20, height = 2.1)
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="ARM B",],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="ARM B",],
                    aes(Days2,`LDH result`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="ARM B",],
              aes(Days2,`LDH result`,group=PID))+
@@ -953,6 +966,8 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="A
   theme(legend.position = "none")+
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383"))
 dev.off()
+
+write.csv(orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="ARM B",], "data/data_Fig3A3.csv", row.names = FALSE)
 # ggplot()+geom_line(data=orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="ARM A" & orig.df$PID<10,],
 #                    aes(Days2,`LDH result`,group=PID))+
 #   geom_point(data=orig.df[is.na(orig.df$`LDH result`)==F & orig.df$ARM=="ARM A" & orig.df$PID<10,],
@@ -1107,7 +1122,7 @@ dev.off()
 
 id<-4
 pdf("Subfig3B_n4.pdf", width = 4, height = 4)
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
                    aes(Days2,`Percentage Mutant VAF`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
              aes(Days2,`Percentage Mutant VAF`,group=PID))+
@@ -1119,9 +1134,11 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383",Off="blue"))+scale_x_continuous(lim=c(0,35))+
   theme(legend.position = "none")
 dev.off()
+write.csv(plt$data, "data/data_SupFig3B_n4.csv", row.names = FALSE)
+
 pdf("Subfig3B_n7.pdf", width = 4, height = 4)
 id<-7
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
                    aes(Days2,`Percentage Mutant VAF`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
              aes(Days2,`Percentage Mutant VAF`,group=PID))+
@@ -1133,9 +1150,11 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383"))+scale_x_continuous(lim=c(0,35))+
   theme(legend.position = "none")
 dev.off()
+write.csv(plt$data, "data/data_SupFig3B_n7.csv", row.names = FALSE)
+
 pdf("Subfig3B_n11.pdf", width = 4, height = 4)
 id<-11
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
                    aes(Days2,`Percentage Mutant VAF`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
              aes(Days2,`Percentage Mutant VAF`,group=PID))+
@@ -1147,9 +1166,11 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383"))+scale_x_continuous(lim=c(0,60))+
   theme(legend.position = "none")
 dev.off()
+write.csv(plt$data, "data/data_SupFig3B_n11.csv", row.names = FALSE)
+
 pdf("Subfig3B_n13.pdf", width = 4, height = 4)
 id<-13
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
                    aes(Days2,`Percentage Mutant VAF`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
              aes(Days2,`Percentage Mutant VAF`,group=PID))+
@@ -1161,9 +1182,11 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383"))+scale_x_continuous(lim=c(0,40))+
   theme(legend.position = "none")
 dev.off()
+write.csv(plt$data, "data/data_SupFig3B_n13.csv", row.names = FALSE)
+
 pdf("Subfig3B_n14.pdf", width = 4, height = 4)
 id<-14
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
                    aes(Days2,`Percentage Mutant VAF`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
              aes(Days2,`Percentage Mutant VAF`,group=PID))+
@@ -1175,9 +1198,11 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383"))+scale_x_continuous(lim=c(0,65))+
   theme(legend.position = "none")
 dev.off()
+write.csv(plt$data, "data/data_SupFig3B_n14.csv", row.names = FALSE)
+
 pdf("Subfig3B_n19.pdf", width = 4, height = 4)
 id<-19
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
                    aes(Days2,`Percentage Mutant VAF`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
              aes(Days2,`Percentage Mutant VAF`,group=PID))+
@@ -1189,9 +1214,11 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383",Targeted="blue"))+scale_x_continuous(lim=c(0,35))+
   theme(legend.position = "none")
 dev.off()
+write.csv(plt$data, "data/data_SupFig3B_n19.csv", row.names = FALSE)
+
 pdf("Subfig3B_n20.pdf", width = 4, height = 4)
 id<-20
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
                    aes(Days2,`Percentage Mutant VAF`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
              aes(Days2,`Percentage Mutant VAF`,group=PID))+
@@ -1203,9 +1230,11 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383"))+scale_x_continuous(lim=c(0,35))+
   theme(legend.position = "none")
 dev.off()
+write.csv(plt$data, "data/data_SupFig3B_n20.csv", row.names = FALSE)
+
 pdf("Subfig3B_n21.pdf", width = 4, height = 4)
 id<-21
-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
+plt<-ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
                    aes(Days2,`Percentage Mutant VAF`,group=PID))+
   geom_point(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig.df$ARM=="ARM B" & orig.df$PID==id,],
              aes(Days2,`Percentage Mutant VAF`,group=PID))+
@@ -1217,6 +1246,8 @@ ggplot()+geom_line(data=orig.df[is.na(orig.df$`Percentage Mutant VAF`)==F & orig
   scale_fill_manual(values=c(IO="#F37B6A",Targeted="#087383"))+scale_x_continuous(lim=c(0,80))+
   theme(legend.position = "none")
 dev.off()
+write.csv(plt$data, "data/data_SupFig3B_n21.csv", row.names = FALSE)
+
 
 # add toxicity and death to create swimmer plot data-set ------------------
 
@@ -1339,7 +1370,7 @@ dummy <- dummy %>% mutate(Treatment = case_when(
   Treatment == "Targeted" ~ "TT"))
 
 pdf("Fig1D.pdf", width = 14, height = 6.5)
-ggplot() +
+plt<-ggplot() +
   geom_segment(dat=dummy, aes(xend = End, yend = PID,
                               x = Start, y = PID, color = Treatment), 
                size = 5,alpha=0.2) +
@@ -1370,6 +1401,8 @@ ggplot() +
     shape = guide_legend(order = 4)
   )
 dev.off()
+write.csv(plt$data, "data/data_Fig1D.csv", row.names = FALSE)
+
 
 
 # Arm A #FFA741
@@ -1403,64 +1436,71 @@ df$ECOG
 df$Visit<-factor(df$Visit,levels=c("Baseline/Screening - Targeted","C1D1 - IO"))
 df$LDH<-as.numeric(df$LDH)
 pdf("Fig2B.pdf", width = 4, height = 4)
-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,LDH,group=PID),alpha=0.3)+
+plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,LDH,group=PID),alpha=0.3)+
   geom_line(aes(Visit,LDH,group=PID),alpha=0.5)+
   theme_bw(base_size=14)+stat_summary(aes(x=Visit,y=LDH,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("LDH [IU/L]")+
   scale_x_discrete(labels = c("Baseline (targeted)", "Pre-Immune therapy")) 
 dev.off()
+write.csv(plt$data, "data/data_Fig2B.csv", row.names = FALSE)
+
 dfnow <- df[df$ARM=="ARM B",]
 p<-wilcox.test(dfnow$LDH[dfnow$Period == 1],
                dfnow$LDH[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2B', ' pvalue=', p$p.value))
 
 pdf("Fig2F.pdf", width = 4, height = 4)
-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,CRP,group=PID),alpha=0.3)+
+plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,CRP,group=PID),alpha=0.3)+
   geom_line(aes(Visit,CRP,group=PID),alpha=0.5)+
   theme_bw(base_size=14)+stat_summary(aes(x=Visit,y=CRP,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("CRP [mg/L]")+scale_y_log10()+
   scale_x_discrete(labels = c("Baseline (targeted)", "Pre-Immune therapy")) 
 dev.off()
+write.csv(plt$data, "data/data_Fig2F.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$CRP[dfnow$Period == 1],
                dfnow$CRP[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2F', ' pvalue=', p$p.value))
 pdf("Fig2G.pdf", width = 4, height = 4)
-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,Platelet,group=PID),alpha=0.3)+
+plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,Platelet,group=PID),alpha=0.3)+
   geom_line(aes(Visit,Platelet,group=PID),alpha=0.5)+
   theme_bw(base_size=14)+stat_summary(aes(x=Visit,y=Platelet,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("Platelet [x10^9/L]")+
   scale_x_discrete(labels = c("Baseline (targeted)", "Pre-Immune therapy")) 
 dev.off()
+write.csv(plt$data, "data/data_Fig2G.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$Platelet[dfnow$Period == 1],
                dfnow$Platelet[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2G', ' pvalue=', p$p.value))
 pdf("Fig2E.pdf", width = 4, height = 4)
-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,Lymphocyte,group=PID),alpha=0.3)+
+plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,Lymphocyte,group=PID),alpha=0.3)+
   geom_line(aes(Visit,Lymphocyte,group=PID),alpha=0.5)+
   theme_bw(base_size=14)+stat_summary(aes(x=Visit,y=Lymphocyte,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("Lymphocyte [x10^9/L]")+
   scale_x_discrete(labels = c("Baseline (targeted)", "Pre-Immune therapy")) 
 dev.off()
+write.csv(plt$data, "data/data_Fig2E.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$Lymphocyte[dfnow$Period == 1],
                dfnow$Lymphocyte[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2E', ' pvalue=', p$p.value))
 pdf("Fig2C.pdf", width = 4, height = 4)
-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,ANC,group=PID),alpha=0.3)+
+plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,ANC,group=PID),alpha=0.3)+
   geom_line(aes(Visit,ANC,group=PID),alpha=0.5)+
   theme_bw(base_size=14)+stat_summary(aes(x=Visit,y=ANC,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("ANC [x10^9/L]")+
   scale_x_discrete(labels = c("Baseline (targeted)", "Pre-Immune therapy")) 
 dev.off()
+write.csv(plt$data, "data/data_Fig2C.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$ANC[dfnow$Period == 1],
                dfnow$ANC[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2C', ' pvalue=', p$p.value))
 pdf("Fig2D.pdf", width = 4, height = 4)
-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,ANC/Lymphocyte,group=PID),alpha=0.3)+
+plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,ANC/Lymphocyte,group=PID),alpha=0.3)+
   geom_line(aes(Visit,ANC/Lymphocyte,group=PID),alpha=0.5)+
   theme_bw(base_size=14)+stat_summary(aes(x=Visit,y=ANC/Lymphocyte,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("ANC/Lymphocyte")+
   scale_x_discrete(labels = c("Baseline (targeted)", "Pre-Immune therapy")) 
 dev.off()
+write.csv(plt$data, "data/data_Fig2D.csv", row.names = FALSE)
 dfnow$ANC_Lympocyte<-dfnow$ANC/dfnow$Lymphocyte
 p<-wilcox.test(dfnow$ANC_Lympocyte[dfnow$Period == 1],
                dfnow$ANC_Lympocyte[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
@@ -1479,12 +1519,13 @@ df.ctdna<-data.frame(Visit=c("B","B","B","B","B","B","B","B","B",
                      PID=c(4,7,11,12,13,14,19,20,21,
                            4,7,11,12,13,14,19,20,21))
 pdf("Fig2A.pdf", width = 4, height = 4)
-ggplot(df.ctdna)+geom_point(aes(Visit,ctDNA,group=PID),alpha=0.3)+
+plt<-ggplot(df.ctdna)+geom_point(aes(Visit,ctDNA,group=PID),alpha=0.3)+
   geom_line(aes(Visit,ctDNA,group=PID),alpha=0.5)+
   theme_bw(base_size=14)+stat_summary(aes(x=Visit,y=ctDNA,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("Mutant VAF [%]")+
   scale_x_discrete(labels = c("Baseline (targeted)", "Pre-Immune therapy")) 
 dev.off()
+write.csv(plt$data, "data/data_Fig2A.csv", row.names = FALSE)
 p<-wilcox.test(df.ctdna$ctDNA[df.ctdna$Visit == "B"],
             df.ctdna$ctDNA[df.ctdna$Visit == "I"], alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2A', ' pvalue=', p$p.value))
@@ -1563,55 +1604,62 @@ sqrt(var(df$ECOG[df$ARM=="ARM A" & df$First=="Targeted" & df$Visit=="Baseline/Sc
 # the C1D1 immune therapy of Arm B?
 
 pdf("Subfig2A.pdf", width = 4, height = 4)
-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,LDH),alpha=0.3)+
+plt<-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,LDH),alpha=0.3)+
   theme_bw(base_size=14)+stat_summary(aes(x=ARM,y=LDH,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("LDH [IU/L]")
 dev.off()
+write.csv(plt$data, "data/data_SupFig2A.csv", row.names = FALSE)
+
 dfnow<-df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),]
 p<-wilcox.test(dfnow$LDH[dfnow$ARM == 'ARM A'],
                dfnow$LDH[dfnow$ARM == 'ARM B'],  exact = FALSE, correct = TRUE)
 print(paste0('SubFig2A', ' pvalue=', p$p.value))
 
 pdf("Subfig2E.pdf", width = 4, height = 4)
-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,CRP),alpha=0.3)+
+plt<-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,CRP),alpha=0.3)+
   theme_bw(base_size=14)+stat_summary(aes(x=ARM,y=CRP,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("CRP [mg/L]")
 dev.off()
+write.csv(plt$data, "data/data_SupFig2E.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$CRP[dfnow$ARM == 'ARM A'],
                dfnow$CRP[dfnow$ARM == 'ARM B'],  exact = FALSE, correct = TRUE)
 print(paste0('SubFig2E', ' pvalue=', p$p.value))
 
 pdf("Subfig2D.pdf", width = 4, height = 4)
-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,Platelet),alpha=0.3)+
+plt<-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,Platelet),alpha=0.3)+
   theme_bw(base_size=14)+stat_summary(aes(x=ARM,y=Platelet,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("Platelet [x10^9/L]")
 dev.off()
+write.csv(plt$data, "data/data_SupFig2D.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$Platelet[dfnow$ARM == 'ARM A'],
                dfnow$Platelet[dfnow$ARM == 'ARM B'],  exact = FALSE, correct = TRUE)
 print(paste0('SubFig2D', ' pvalue=', p$p.value))
 
 pdf("Subfig2F.pdf", width = 4, height = 4)
-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,Lymphocyte),alpha=0.3)+
+plt<-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,Lymphocyte),alpha=0.3)+
   theme_bw(base_size=14)+stat_summary(aes(x=ARM,y=Lymphocyte,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("Lymphocyte [x10^9/L]")
 dev.off()
+write.csv(plt$data, "data/data_SupFig2F.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$Lymphocyte[dfnow$ARM == 'ARM A'],
                dfnow$Lymphocyte[dfnow$ARM == 'ARM B'],  exact = FALSE, correct = TRUE)
 print(paste0('SubFig2F', ' pvalue=', p$p.value))
 
 pdf("Subfig2B.pdf", width = 4, height = 4)
-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,ANC),alpha=0.3)+
+plt<-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,ANC),alpha=0.3)+
   theme_bw(base_size=14)+stat_summary(aes(x=ARM,y=ANC,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("ANC [x10^9/L]")
 dev.off()
+write.csv(plt$data, "data/data_SupFig2B.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$ANC[dfnow$ARM == 'ARM A'],
                dfnow$ANC[dfnow$ARM == 'ARM B'],  exact = FALSE, correct = TRUE)
 print(paste0('SubFig2B', ' pvalue=', p$p.value))
 pdf("Subfig2C.pdf", width = 4, height = 4)
-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,ANC/Lymphocyte),alpha=0.3)+
+plt<-ggplot(df[(df$First=="IO" & df$ARM=="ARM A")|(df$Visit=="C1D1 - IO" & df$ARM=="ARM B"),])+geom_point(aes(ARM,ANC/Lymphocyte),alpha=0.3)+
   theme_bw(base_size=14)+stat_summary(aes(x=ARM,y=ANC/Lymphocyte,group=Visit),col=2,size=1,alpha=0.5)+
   ylab("ANC/Lymphocyte")
 dev.off()
+write.csv(plt$data, "data/data_SupFig2C.csv", row.names = FALSE)
 dfnow$ANC_Lymphocyte<-dfnow$ANC/dfnow$Lymphocyte
 p<-wilcox.test(dfnow$ANC_Lymphocyte[dfnow$ARM == 'ARM A'],
                dfnow$ANC_Lymphocyte[dfnow$ARM == 'ARM B'],  exact = FALSE, correct = TRUE)

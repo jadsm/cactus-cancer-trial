@@ -50,8 +50,8 @@ d1 <- d1 %>% mutate(`Eligible for study` = case_when(
   `Eligible for study` == "00|No" ~ "No",
   `Eligible for study` == "01|Yes" ~ "Yes"))
 
-pdf("Fig1A.pdf", width = 8, height = 6.6)
-ggplot(d1,aes(`Date result received by Investigator`,`BRAF VAF ctDNA result`,
+pdf("figures/Fig1A.pdf", width = 8, height = 6.6)
+plt<-ggplot(d1,aes(`Date result received by Investigator`,`BRAF VAF ctDNA result`,
               col=`Eligible for study`))+geom_point(size=3)+
   theme_bw(base_size=14)+scale_y_log10()+ylab("BRAF VAF ctDNA [%]")+
   geom_hline(yintercept = 1.5,col=1,lty=2)+
@@ -59,6 +59,7 @@ ggplot(d1,aes(`Date result received by Investigator`,`BRAF VAF ctDNA result`,
   geom_vline(xintercept = as.Date("2020-07-02"), linetype = "dashed", color = "#008080", linewidth = 1) +
   scale_color_manual(values = c("Yes" = "blue", "No" = "red"))
 dev.off()
+write.csv(plt$data, "data/data_Fig1A.csv", row.names = FALSE)
 
 ggplot(d1,aes(`Eligible for study`,`BRAF VAF ctDNA result`,
               col=`Eligible for study`))+geom_jitter()+
@@ -704,7 +705,7 @@ colours1<-colours1 %>%
   arrange(PID) %>%
   mutate(PID = as.character(PID))
 colours1<- mapping[colours1$response]
-pdf("Subfig22S.pdf", width = 8, height = 6)
+pdf("figures/Subfig22S.pdf", width = 8, height = 6)
 bar_positions <- barplot(sort(b1$BPCH1, decreasing = TRUE), 
                          col = colours1, #"#FFA741"
                          main = "ARM A", 
@@ -718,6 +719,8 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
+
+write.csv(b1$BPCH1, "data/data_SupFig22S.csv", row.names = FALSE)
 
 # subFig2.2. T
 sorted_PIDs <- b2$PID[order(b2$BPCH1[is.finite(b2$BPCH1)], decreasing = TRUE)]
@@ -740,6 +743,8 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
+write.csv(b2$BPCH1, "data/data_SupFig22T.csv", row.names = FALSE)
+
 
 # export the lengend only
 pdf('legend2_2.pdf', width = 3, height = 2)
@@ -809,6 +814,8 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
+write.csv(b2$BPCH2[is.finite(b2$BPCH2)], "data/data_Fig2K.csv", row.names = FALSE)
+
 
 pdf('Fig2L.pdf', width = 8, height = 6)
 bar_positions <- barplot(c(-53,-99,-99,-99,-99), 
@@ -824,6 +831,8 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
+
+write.csv(c(-53,-99,-99,-99,-99), "data/data_Fig2L.csv", row.names = FALSE)
 
 # now we manually do VAf best % change - read off graphs
 # Supp Fig 2.2U
@@ -843,6 +852,7 @@ text(x = bar_positions,
      col = "black")  # Color of the labels
 dev.off()
 
+
 # Supp Fig 2.2V
 pdf("Subfig22V.pdf", width = 8, height = 6)
 bar_positions <- barplot(c(-99,-85,-99,-99,-99,-99,-99,-99,-99,-99), 
@@ -859,6 +869,8 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
+write.csv(c(-99,-85,-99,-99,-99,-99,-99,-99,-99,-99), "data/data_SupFig22V.csv", row.names = FALSE)
+
 
 # Supp Fig 2.2W - read from graph
 pdf("Subfig22W.pdf", width = 8, height = 6)
@@ -877,6 +889,7 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
+write.csv(data22W, "data/data_SupFig22W.csv", row.names = FALSE)
 
 # Supp Fig 2.2X - read from graph
 pdf("Subfig22X.pdf", width = 8, height = 6)
@@ -895,6 +908,8 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
+write.csv(data22X, "data/data_SupFig22X.csv", row.names = FALSE)
+
 
 
 
@@ -935,6 +950,10 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
+write.csv(b2$BPCH3[is.finite(b2$BPCH3)], "data/data_Fig2I.csv", row.names = FALSE)
+
+
+
 # patient 2 did not have post imaging and patient 11 switched after 2 weeks
 
 # -	Arm B the best percentage change from the scan at switch up to either study end 
@@ -974,6 +993,8 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
+
+write.csv(b2$BPCH4[is.finite(b2$BPCH4)], "data/data_Fig2J.csv", row.names = FALSE)
 
 df1<-unique(d6[,c("PID","BPCH3","BPCH4","Treatment arm")])
 plot(df1$BPCH3,df1$BPCH4,xlab="Targeted",ylab="IO")

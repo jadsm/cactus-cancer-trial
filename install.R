@@ -3,7 +3,8 @@ packages <- c(
   "tidyverse", # Includes ggplot2, dplyr, lubridate
   "haven",     # For .dta files
   "survival",  # For survival analysis
-  "survminer"  # For survival visualization
+  "survminer",  # For survival visualization
+  "epiR"      # For epidemiological analysis
 )
 
 # Function to install missing packages

@@ -13,6 +13,7 @@ The scripts in this repository facilitate the reproduction of survival analyses 
 * `haven` (Importing .dta files)
 * `lubridate` (Date operations)
 * `survival` & `survminer` (Survival analysis and plotting)
+* `epiR` (epidemiological analysis)
 
 ---
 
@@ -28,7 +29,7 @@ sudo apt update
 sudo apt install -y libcurl4-openssl-dev libssl-dev libxml2-dev \
     libfontconfig1-dev libharfbuzz-dev libfribidi-dev \
     libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev \
-    cmake
+    cmake libudunits2-dev libgdal-dev libgeos-dev libproj-dev
 ```
 
 ### 2. Run the Installation Script
@@ -43,6 +44,8 @@ Rscript install.R
 Once the installation is complete, you can run the primary analysis scripts located in the root directory.
 
 Ensure that any required .dta files are placed in the appropriate data directory before running the scripts.
+
+To request the data, please refer to Dr Rebecca Lee (rebecca.lee-3@manchester.ac.uk).
 
 ## Contact
 For inquiries regarding the forecasting models or data access, please contact the authors at Systems Forecasting (hitesh@systemsforecasting.co.uk and juan@systemsforecasting.co.uk).
