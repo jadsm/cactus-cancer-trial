@@ -140,6 +140,13 @@ d1<-d1[,c("PID",
 
 summary(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A"])
 summary(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="02|ARM B"])
+summary(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A" & d1$`Dab and Tram immediately` =="01|Yes"])
+summary(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A" & d1$`Dab and Tram immediately` =="00|No"])
+
+wilcox.test(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A" & d1$`Dab and Tram immediately` =="01|Yes"],
+ d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A" & d1$`Dab and Tram immediately` =="00|No"], 
+ paired = FALSE, alternative = "two.sided")
+
 
 d1[d1$`Treatment arm`=="01|ARM A",c("Liver",
                                     "Lung",

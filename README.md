@@ -15,6 +15,24 @@ The scripts in this repository facilitate the reproduction of survival analyses 
 * `survival` & `survminer` (Survival analysis and plotting)
 * `epiR` (epidemiological analysis)
 
+### Files
+The primary files containing most of the analysis are: 
+* ctDNA_data_check.R
+* primary_secondary_plots_analyses.R
+
+There are a few other side analyses contained in other files:
+* time_series_analysis.R
+* ctDNA_data_assessment.R
+* Cox_PH.R
+These analyses might be of use to some users.
+
+### 🚀 Usage
+Once the installation is complete, you can run the primary analysis scripts located in the root directory.
+Ensure that any required .dta files are placed in the appropriate data directory before running the scripts.
+
+### Usage
+To request the data, please refer to Dr Rebecca Lee (rebecca.lee-3@manchester.ac.uk).
+
 ---
 
 ## 🛠 Installation
@@ -38,14 +56,6 @@ After the system dependencies are installed, run the install.R file to install t
 ```bash
 Rscript install.R
 ```
-
-## 🚀 Usage
-
-Once the installation is complete, you can run the primary analysis scripts located in the root directory.
-
-Ensure that any required .dta files are placed in the appropriate data directory before running the scripts.
-
-To request the data, please refer to Dr Rebecca Lee (rebecca.lee-3@manchester.ac.uk).
 
 ## Contact
 For inquiries regarding the forecasting models or data access, please contact the authors at Systems Forecasting (hitesh@systemsforecasting.co.uk and juan@systemsforecasting.co.uk).
