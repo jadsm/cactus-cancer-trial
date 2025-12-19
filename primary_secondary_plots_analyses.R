@@ -140,11 +140,13 @@ d1<-d1[,c("PID",
 
 summary(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A"])
 summary(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="02|ARM B"])
-summary(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A" & d1$`Dab and Tram immediately` =="01|Yes"])
-summary(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A" & d1$`Dab and Tram immediately` =="00|No"])
 
-wilcox.test(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A" & d1$`Dab and Tram immediately` =="01|Yes"],
- d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A" & d1$`Dab and Tram immediately` =="00|No"], 
+# ARM A - commencind on TT vs CPI
+filtered_d11 <- d1[d1$PID %in% c(1,3,6,8,9,10), ]$`BRAF VAF ctDNA result`
+summary(filtered_d11)
+filtered_d12 <- d1[d1$PID %in% c(15,16,17,18), ]$`BRAF VAF ctDNA result`
+summary(filtered_d12)
+wilcox.test(filtered_d11, filtered_d12,
  paired = FALSE, alternative = "two.sided")
 
 
