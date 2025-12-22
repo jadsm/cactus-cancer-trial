@@ -1446,7 +1446,7 @@ write.csv(plt$data, "data/data_Fig2B.csv", row.names = FALSE)
 
 dfnow <- df[df$ARM=="ARM B",]
 p<-wilcox.test(dfnow$LDH[dfnow$Period == 1],
-               dfnow$LDH[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
+               dfnow$LDH[dfnow$Period == 2], PAIRED=TRUE,alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2B', ' pvalue=', p$p.value))
 
 pdf("figures/Fig2F.pdf", width = 4, height = 4)
@@ -1458,7 +1458,7 @@ plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,CRP,group=PID),alpha=0.3)
 dev.off()
 write.csv(plt$data, "data/data_Fig2F.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$CRP[dfnow$Period == 1],
-               dfnow$CRP[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
+               dfnow$CRP[dfnow$Period == 2], PAIRED=TRUE,alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2F', ' pvalue=', p$p.value))
 pdf("figures/Fig2G.pdf", width = 4, height = 4)
 plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,Platelet,group=PID),alpha=0.3)+
@@ -1469,7 +1469,7 @@ plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,Platelet,group=PID),alpha
 dev.off()
 write.csv(plt$data, "data/data_Fig2G.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$Platelet[dfnow$Period == 1],
-               dfnow$Platelet[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
+               dfnow$Platelet[dfnow$Period == 2], PAIRED=TRUE,alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2G', ' pvalue=', p$p.value))
 pdf("figures/Fig2E.pdf", width = 4, height = 4)
 plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,Lymphocyte,group=PID),alpha=0.3)+
@@ -1480,7 +1480,7 @@ plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,Lymphocyte,group=PID),alp
 dev.off()
 write.csv(plt$data, "data/data_Fig2E.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$Lymphocyte[dfnow$Period == 1],
-               dfnow$Lymphocyte[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
+               dfnow$Lymphocyte[dfnow$Period == 2], PAIRED=TRUE,alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2E', ' pvalue=', p$p.value))
 pdf("figures/Fig2C.pdf", width = 4, height = 4)
 plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,ANC,group=PID),alpha=0.3)+
@@ -1491,7 +1491,7 @@ plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,ANC,group=PID),alpha=0.3)
 dev.off()
 write.csv(plt$data, "data/data_Fig2C.csv", row.names = FALSE)
 p<-wilcox.test(dfnow$ANC[dfnow$Period == 1],
-               dfnow$ANC[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
+               dfnow$ANC[dfnow$Period == 2], PAIRED=TRUE,alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2C', ' pvalue=', p$p.value))
 pdf("figures/Fig2D.pdf", width = 4, height = 4)
 plt<-ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,ANC/Lymphocyte,group=PID),alpha=0.3)+
@@ -1503,7 +1503,7 @@ dev.off()
 write.csv(plt$data, "data/data_Fig2D.csv", row.names = FALSE)
 dfnow$ANC_Lympocyte<-dfnow$ANC/dfnow$Lymphocyte
 p<-wilcox.test(dfnow$ANC_Lympocyte[dfnow$Period == 1],
-               dfnow$ANC_Lympocyte[dfnow$Period == 2], alternative = "two.sided", exact = FALSE, correct = TRUE)
+               dfnow$ANC_Lympocyte[dfnow$Period == 2], PAIRED=TRUE,alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2D', ' pvalue=', p$p.value))
 
 ggplot(df[df$ARM=="ARM B",])+geom_point(aes(Visit,ANC/Lymphocyte,group=PID),alpha=0.3)+
@@ -1527,7 +1527,7 @@ plt<-ggplot(df.ctdna)+geom_point(aes(Visit,ctDNA,group=PID),alpha=0.3)+
 dev.off()
 write.csv(plt$data, "data/data_Fig2A.csv", row.names = FALSE)
 p<-wilcox.test(df.ctdna$ctDNA[df.ctdna$Visit == "B"],
-            df.ctdna$ctDNA[df.ctdna$Visit == "I"], alternative = "two.sided", exact = FALSE, correct = TRUE)
+            df.ctdna$ctDNA[df.ctdna$Visit == "I"], paired=TRUE,alternative = "two.sided", exact = FALSE, correct = TRUE)
 print(paste0('Fig2A', ' pvalue=', p$p.value))
 
 # ECOG we do as a table
