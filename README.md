@@ -17,13 +17,14 @@ The scripts in this repository facilitate the reproduction of survival analyses 
 
 ### Files
 The primary files containing most of the analysis are: 
-* ctDNA_data_check.R
-* primary_secondary_plots_analyses.R
+* ctDNA_data_check.R - data check and due diligence
+* primary_secondary_plots_analyses.R - primary analyses and plots
 
 There are a few other side analyses contained in other files:
-* time_series_analysis.R
-* ctDNA_data_assessment.R
-* Cox_PH.R
+* time_series_analysis.R - time series and LME modelling
+* ctDNA_data_assessment.R - ctDNA calculations
+* Cox_PH.R - Cox PH modellins
+* table_schemas.json - description of the original table schemas (refer to Rebecca Lee for access to raw data)
 These analyses might be of use to some users.
 
 ### 🚀 Usage
