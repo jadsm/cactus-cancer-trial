@@ -1,6 +1,6 @@
-# Cactus Cancer Trial
+# CAcTUS Cancer Trial
 
-This repository contains the analyses included in the **CACTUS cancer trial**.
+This repository contains the analyses included in the **CAcTUS cancer trial**.
 
 > **Status:** Submitted for publication in *Nature Communications* (2025).  
 > **Authors:** Dr. Hitesh Mistry & Dr. Juan Delgado-SanMartin — Systems Forecasting
