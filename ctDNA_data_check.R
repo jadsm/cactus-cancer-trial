@@ -8,7 +8,7 @@ require(tidyverse)
 require(readxl)
 
 # load and clean ctDNA data -----------------------------------------------
-orig.df<-read_xlsx("../Data/CAcTUS VAF final report ddPCR Data for sponsor_R1.xlsx",sheet=1)
+orig.df<-read_xlsx("CAcTUS VAF final report ddPCR Data for sponsor_R1.xlsx",sheet=1)
 # note the file contains replicates but these are only for screening samples
 # after discussions with Becki it was decided we will use the excel sheet for the bulk of the
 # analyses
@@ -19,7 +19,7 @@ orig.df$Patient<-as.numeric(str_remove(orig.df$Patient,"-"))
 # the IDs are a mix of screening and patient ID, the link between the two is taken from the
 # ctDNA report
 
-links<-read_xlsx("../Data/ID_links.xlsx")
+links<-read_xlsx("ID_links.xlsx")
 links$`Patient ID`<-as.numeric(str_remove(links$`Patient ID`,"-"))
 links$`Screening ID`<-as.numeric(str_remove(links$`Screening ID`,"-"))
 
@@ -31,7 +31,7 @@ orig.df$Screening[orig.df$ID %in% links$`Screening ID`]<-"Yes"
 
 # lets now assign red and green labelling
 
-red.df<-read_xlsx("../Data/CAcTUS VAF final report ddPCR Data for sponsor_R1.xlsx",sheet=2)
+red.df<-read_xlsx("CAcTUS VAF final report ddPCR Data for sponsor_R1.xlsx",sheet=2)
 red.df<-red.df[is.na(red.df$`Patient ID`)==F,]
 colnames(red.df)
 red.df<-red.df[,c("Patient ID","Visit","Working days from Receipt to report")]
@@ -41,7 +41,7 @@ orig.df<-merge(orig.df,red.df,by=c("ID","Visit"),all.x=T,all.y=T)
 orig.df$Red<-"No"
 orig.df$Red[is.na(orig.df$`Working days from Receipt to report`)==F]<-"Yes"
 
-green.df<-read_xlsx("../Data/CAcTUS VAF final report ddPCR Data for sponsor_R1.xlsx",sheet=3)
+green.df<-read_xlsx("CAcTUS VAF final report ddPCR Data for sponsor_R1.xlsx",sheet=3)
 green.df<-green.df[is.na(green.df$`Patient ID`)==F,]
 green.df$`Patient ID`<-as.numeric(str_remove(green.df$`Patient ID`,"-"))
 green.df$Green<-"Yes"
@@ -132,7 +132,7 @@ dev.off()
 
 
 # we will now bring in randomisation date and treatmnet arm
-d1<-read.csv("../Data/CSV_export/CAcTUS.Table 1.csv")
+d1<-read.csv("CAcTUS.Table 1.csv")
 colnames(d1)<-d1[1,]
 d1<-d1[-1,]
 colnames(d1)
@@ -169,8 +169,7 @@ orig.df$Treatment[str_detect(orig.df$Visit,"N")]<-"IO"
 
 
 # now we need baseline dates for each patient
-
-d3<-read.csv("../Data/CSV_export/CAcTUS.Table 3.csv")
+d3<-read.csv("CAcTUS.Table 3.csv")
 colnames(d3)<-d3[1,]
 d3<-d3[-1,]
 d3<-d3[,c("PID","Baseline visit date")]
@@ -178,14 +177,14 @@ d3<-d3[,c("PID","Baseline visit date")]
 orig.df<-merge(orig.df,d3,by=c("PID"),all.x=T,all.y=F)
 
 
-d2<-read.csv("../Data/CSV_export/CAcTUS.Table 2.csv")
+d2<-read.csv("CAcTUS.Table 2.csv")
 colnames(d2)<-d2[1,]
 d2<-d2[-1,]
 d2<-d2[d2$`Dab dispensed date`!="8888-88-88",c("PID","Dab dispensed date")]
 
 orig.df<-merge(orig.df,d2,by=c("PID"),all.x=T,all.y=F)
 
-d11<-read.csv("../Data/CSV_export/CAcTUS.Table 11.csv")
+d11<-read.csv("CAcTUS.Table 11.csv")
 colnames(d11)<-d11[1,]
 d11<-d11[-1,]
 d11<-d11[d11$`Treatment cycle`=="01|Cycle 01",c("PID","Visit date (Immune)")]
@@ -386,12 +385,12 @@ ggplot(orig.df[orig.df$Firstlinetreatment==orig.df$Treatment & is.na(orig.df$Vis
 
 
 
-d7<-read.csv("../Data/CSV_export/CAcTUS.Table 7.csv")
+d7<-read.csv("CAcTUS.Table 7.csv")
 colnames(d7)<-d7[1,]
 d7<-d7[-1,]
 colnames(d7)
 
-d11<-read.csv("../Data/CSV_export/CAcTUS.Table 11.csv")
+d11<-read.csv("CAcTUS.Table 11.csv")
 colnames(d11)<-d11[1,]
 d11<-d11[-1,]
 colnames(d11)
@@ -428,7 +427,7 @@ orig.df<-merge(orig.df[,c(1,2,4,5,6,10,11)],trt,by=c("PID","Date"),
 
 
 
-d6<-read.csv("../Data/CSV_export/CAcTUS.Table 6_RECIST.csv")
+d6<-read.csv("CAcTUS.Table 6_RECIST.csv")
 
 colnames(d6)<-d6[1,]
 d6<-d6[-1,]
@@ -520,7 +519,7 @@ orig.df<-merge(orig.df,d6[,c("PID","Date","Overall response","SUM")],
 
 
 # we now bring in LDH...
-d25<-read.csv("../Data/CSV_export/CAcTUS.Table 25.csv")
+d25<-read.csv("CAcTUS.Table 25.csv")
 
 colnames(d25)<-d25[1,]
 d25<-d25[-1,]
@@ -629,7 +628,7 @@ result4$PID<-as.numeric(result4$PID)
 # patient 18 days 42 shoudl eb IO as it takes 3 weeks before you can start targeted
 # drugs were dispensed but they are still IO
 
-d7<-read.csv("../Data/CSV_export/CAcTUS.Table 7.csv")
+d7<-read.csv("CAcTUS.Table 7.csv")
 colnames(d7)<-d7[1,]
 d7<-d7[-1,]
 colnames(d7)
@@ -1235,7 +1234,7 @@ recist$Response[recist$Response=="04|PD"]<-"PD"
 recist$Response[recist$Response=="05|NE"]<-"NE"
 
 # lets collect death dates and add them
-d19<-read.csv("../Data/CSV_export/CAcTUS.Table 19.csv")
+d19<-read.csv("CAcTUS.Table 19.csv")
 colnames(d19)<-d19[1,]
 d19<-d19[-1,]
 colnames(d19)
@@ -1293,7 +1292,7 @@ recist$PID<-factor(recist$PID,levels=c(3,1,18,16,17,15,8,9,10,6,
 
 # now we add in toxicity....
 
-d13<-read.csv("../Data/CSV_export/CAcTUS.Table 13.csv")
+d13<-read.csv("CAcTUS.Table 13.csv")
 colnames(d13)<-d13[1,]
 d13<-d13[-1,]
 

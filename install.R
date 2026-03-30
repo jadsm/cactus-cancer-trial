@@ -10,20 +10,24 @@ packages <- c(
   "haven",     # For .dta files
   "survival",  # For survival analysis
   "survminer",  # For survival visualization
-  "epiR"      # For epidemiological analysis
+  "epiR",      # For epidemiological analysis
   "lubridate", # For date manipulation
   "ggplot2", # For data visualization
-  "dplyr" # For data manipulation
+  "dplyr", # For data manipulation
+  "EnvStats", # For statistical analysis
+  "nlme" # For linear mixed-effects models
 )
 
-# Function to install missing packages
+# Function to check, install, and load packages
 install_if_missing <- function(p) {
-  if (!requireNamespace(p, quietly = TRUE)) {
+  # 'character.only = TRUE' tells R that 'p' is a variable containing the name
+  if (!require(p, character.only = TRUE)) {
     install.packages(p, dependencies = TRUE)
+    library(p, character.only = TRUE)
   }
 }
 
-# Run the installation
-lapply(packages, install_if_missing)
+# Run the function over the list
+invisible(sapply(packages, install_if_missing))
 
-message("Installation complete!")
+message("--- All libraries are installed and loaded! ---")
