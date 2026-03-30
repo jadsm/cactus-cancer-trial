@@ -1,3 +1,10 @@
+# =============================================================================
+# ctDNA Analysis Script
+# Loads, cleans, and analyses circulating tumour DNA (ctDNA) data from the
+# CAcTUS trial, then merges with clinical data (RECIST, LDH, treatment periods)
+# to produce figures for the manuscript.
+# =============================================================================
+
 # load libraries
 library(tidyverse)  # read and elaborate data
 library(haven)      # read .dta files
@@ -13,7 +20,7 @@ library(dplyr)
 # Demographics -----------------------------------------------------------
 
 # we will go through each table and select what we need
-d1<-read.csv("../Data/CSV_export/CAcTUS.Table 1.csv")
+d1<-read.csv("CAcTUS.Table 1.csv")
 colnames(d1)<-d1[1,]
 d1<-d1[-1,]
 colnames(d1)
@@ -29,7 +36,6 @@ d1$`Failed Ex number`[d1$`Eligible for study`=="00|No"]
 # apparently it started off with 5% and then changed to 1.5%
 # 9.	Adequate organ function (see table 2.)
   
-
 # interestingly all had ctDNA measurements
 d1$`BRAF VAF ctDNA result`
 # 888.88 are NA
@@ -127,9 +133,9 @@ d1<-d1[,c("PID",
 # KM plots ----------------------------------------------------------------
 
 
-d19<-read.csv("../Data/CSV_export/CAcTUS.Table 19.csv")
+d19<-read.csv("CAcTUS.Table 19.csv")
 # has death dates and right-censoring for OS
-d6<-read.csv("../Data/CSV_export/CAcTUS.Table 6_RECIST.csv")
+d6<-read.csv("CAcTUS.Table 6_RECIST.csv")
 # this has progression times so a 1st and 2nd one
 # we are meant to compare arms for 1st PFS and then 2nd PFS
 
@@ -508,7 +514,7 @@ print(ggsurv)
 
 # Toxicity #####################################################################
 
-d13<-read.csv("../Data/CSV_export/CAcTUS.Table 13.csv")
+d13<-read.csv("CAcTUS.Table 13.csv")
 colnames(d13)<-d13[1,]
 d13<-d13[-1,]
 

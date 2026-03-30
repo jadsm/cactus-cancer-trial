@@ -12,3 +12,4 @@
 /toxicity.csv
 /toxicity_IO.csv
 /toxicity_targeted.csv
+*.py

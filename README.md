@@ -3,7 +3,7 @@
 This repository contains the analyses included in the **CACTUS cancer trial**.
 
 > **Status:** Submitted for publication in *Nature Communications* (2025).  
-> **Authors:** Dr. Hitesh Mistry & Dr. Juan Delgado — Systems Forecasting
+> **Authors:** Dr. Hitesh Mistry & Dr. Juan Delgado-SanMartin — Systems Forecasting
 
 ---
 

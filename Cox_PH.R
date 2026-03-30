@@ -1,3 +1,8 @@
+# =============================================================================
+# Performs Cox Proportional Hazards (Cox PH) analysis on the CAcTUS trial data,
+# using both longitudinal and cross-sectional approaches to evaluate the impact
+# =============================================================================
+
 # install.packages(c("survival", "survminer"))
 # https://www.r-bloggers.com/2016/12/cox-proportional-hazards-model/
 library("survival")

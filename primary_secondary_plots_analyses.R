@@ -1,3 +1,11 @@
+# =============================================================================
+# Primary and Secondary Analyses Script
+# Loads, cleans, and analyses circulating tumour DNA (ctDNA) data from the
+# CAcTUS trial, then merges with clinical data (RECIST, LDH, treatment periods)
+# to produce primary statistical analyses and secondary (advanced) analyses and plots
+# for the manuscript.
+# =============================================================================
+
 # load libraries
 library(tidyverse)  # read and elaborate data
 library(haven)      # read .dta files
@@ -13,7 +21,7 @@ library(dplyr)
 # Demographics -----------------------------------------------------------
 
 # we will go through each table and select what we need
-d1<-read.csv("../Data/CSV_export/CAcTUS.Table 1.csv")
+d1<-read.csv("CAcTUS.Table 1.csv")
 colnames(d1)<-d1[1,]
 d1<-d1[-1,]
 colnames(d1)
@@ -50,8 +58,8 @@ d1 <- d1 %>% mutate(`Eligible for study` = case_when(
   `Eligible for study` == "00|No" ~ "No",
   `Eligible for study` == "01|Yes" ~ "Yes"))
 
-pdf("figures/Fig1A.pdf", width = 8, height = 6.6)
-plt<-ggplot(d1,aes(`Date result received by Investigator`,`BRAF VAF ctDNA result`,
+pdf("Fig1A.pdf", width = 8, height = 6.6)
+ggplot(d1,aes(`Date result received by Investigator`,`BRAF VAF ctDNA result`,
               col=`Eligible for study`))+geom_point(size=3)+
   theme_bw(base_size=14)+scale_y_log10()+ylab("BRAF VAF ctDNA [%]")+
   geom_hline(yintercept = 1.5,col=1,lty=2)+
@@ -59,7 +67,6 @@ plt<-ggplot(d1,aes(`Date result received by Investigator`,`BRAF VAF ctDNA result
   geom_vline(xintercept = as.Date("2020-07-02"), linetype = "dashed", color = "#008080", linewidth = 1) +
   scale_color_manual(values = c("Yes" = "blue", "No" = "red"))
 dev.off()
-write.csv(plt$data, "data/data_Fig1A.csv", row.names = FALSE)
 
 ggplot(d1,aes(`Eligible for study`,`BRAF VAF ctDNA result`,
               col=`Eligible for study`))+geom_jitter()+
@@ -141,15 +148,6 @@ d1<-d1[,c("PID",
 summary(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A"])
 summary(d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="02|ARM B"])
 
-# ARM A - commencind on TT vs CPI
-filtered_d11 <- d1[d1$PID %in% c(1,3,6,8,9,10), ]$`BRAF VAF ctDNA result`
-summary(filtered_d11)
-filtered_d12 <- d1[d1$PID %in% c(15,16,17,18), ]$`BRAF VAF ctDNA result`
-summary(filtered_d12)
-wilcox.test(filtered_d11, filtered_d12,
- paired = FALSE, alternative = "two.sided")
-
-
 d1[d1$`Treatment arm`=="01|ARM A",c("Liver",
                                     "Lung",
                                     "Subcutaneous",
@@ -191,9 +189,9 @@ d1$`BRAF VAF ctDNA result`[d1$`Treatment arm`=="01|ARM A"]
 
 
 
-d19<-read.csv("../Data/CSV_export/CAcTUS.Table 19.csv")
+d19<-read.csv("CAcTUS.Table 19.csv")
 # has death dates and right-censoring for OS
-d6<-read.csv("../Data/CSV_export/CAcTUS.Table 6_RECIST.csv")
+d6<-read.csv("CAcTUS.Table 6_RECIST.csv")
 # this has progression times so a 1st and 2nd one
 # we are meant to compare arms for 1st PFS and then 2nd PFS
 
@@ -613,7 +611,7 @@ ggsurv
 # SD #81B4DA
 # NE #7F93A6
 # we will 
-d6<-read.csv("../Data/CSV_export/CAcTUS.Table 6_RECIST.csv")
+d6<-read.csv("CAcTUS.Table 6_RECIST.csv")
 
 colnames(d6)<-d6[1,]
 d6<-d6[-1,]
@@ -714,22 +712,21 @@ colours1<-colours1 %>%
   arrange(PID) %>%
   mutate(PID = as.character(PID))
 colours1<- mapping[colours1$response]
-pdf("figures/Subfig22S.pdf", width = 8, height = 6)
+pdf("Subfig22S.pdf", width = 8, height = 6)
+par(mar = c(4, 5, 1, 1) + 0.1)
 bar_positions <- barplot(sort(b1$BPCH1, decreasing = TRUE), 
                          col = colours1, #"#FFA741"
                          main = "ARM A", 
-                         cex.axis = 1.5, 
+                         cex.axis = 1.8, 
                          ylab = "Best % Change SLD", 
-                         cex.lab = 1.5,ylim=c(-113,100))  # Increases the y-axis label size
+                         cex.lab = 1.8,ylim=c(-113,100))  # Increases the y-axis label size
 text(x = bar_positions, 
      y = sort(b1$BPCH1, decreasing = TRUE), 
      labels = sorted_PIDs, 
      pos = 1,   # Position labels above the bars
-     cex = 1.2, # Adjust the size of the labels
+     cex = 1.8, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
-
-write.csv(b1$BPCH1, "data/data_SupFig22S.csv", row.names = FALSE)
 
 # subFig2.2. T
 sorted_PIDs <- b2$PID[order(b2$BPCH1[is.finite(b2$BPCH1)], decreasing = TRUE)]
@@ -739,21 +736,20 @@ colours2<-colours2 %>%
   mutate(PID = as.character(PID))
 colours2<- mapping[colours2$response]
 pdf("Subfig22T.pdf", width = 8, height = 6)
+par(mar = c(4, 5, 1, 1) + 0.1)
 bar_positions <- barplot(sort(b2$BPCH1[is.finite(b2$BPCH1)], decreasing = TRUE), 
                          col = colours2,#"#3684BC" 
                          main = "ARM B", 
-                         cex.axis = 1.5, 
+                         cex.axis = 1.8, 
                          ylab = "Best % Change SLD", 
-                         cex.lab = 1.5,ylim=c(-113,100))  # Increases the y-axis label size
+                         cex.lab = 1.8,ylim=c(-113,100))  # Increases the y-axis label size
 text(x = bar_positions, 
      y = sort(b2$BPCH1[is.finite(b2$BPCH1)], decreasing = TRUE), 
      labels = sorted_PIDs, 
      pos = 1,   # Position labels above the bars
-     cex = 1.2, # Adjust the size of the labels
+     cex = 1.8, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
-write.csv(b2$BPCH1, "data/data_SupFig22T.csv", row.names = FALSE)
-
 
 # export the lengend only
 pdf('legend2_2.pdf', width = 3, height = 2)
@@ -809,77 +805,74 @@ text(x = bar_positions,
 
 
 pdf('Fig2K.pdf', width = 8, height = 6)
+par(mar = c(4, 5, 1, 1) + 0.1)
 bar_positions <- barplot(sort(b2$BPCH2[is.finite(b2$BPCH2)], decreasing = TRUE), 
                          col = "#3684BC", 
                          main = "", 
-                         cex.axis = 1.5, 
+                         cex.axis = 1.8, 
                          ylab = "Best % Change SLD", 
-                         cex.lab = 1.5,ylim=c(-113,0))  # Increases the y-axis label size
+                         cex.lab = 1.8,ylim=c(-113,0))  # Increases the y-axis label size
 sorted_PIDs <- b2$PID[order(b2$BPCH2[is.finite(b2$BPCH2)], decreasing = TRUE)]
 text(x = bar_positions, 
      y = sort(b2$BPCH2[is.finite(b2$BPCH2)], decreasing = TRUE), 
      labels = sorted_PIDs, 
      pos = 1,   # Position labels above the bars
-     cex = 1.2, # Adjust the size of the labels
+     cex = 1.8, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
-write.csv(b2$BPCH2[is.finite(b2$BPCH2)], "data/data_Fig2K.csv", row.names = FALSE)
-
 
 pdf('Fig2L.pdf', width = 8, height = 6)
+par(mar = c(4, 5, 1, 1) + 0.1)
 bar_positions <- barplot(c(-53,-99,-99,-99,-99), 
                          col = "#008080", 
                          main = "", 
-                         cex.axis = 1.5, 
+                         cex.axis = 1.8, 
                          ylab = "Best % Change Mutant VAF", 
-                         cex.lab = 1.5,ylim=c(-113,0))  # Increases the y-axis label size
+                         cex.lab = 1.8,ylim=c(-113,0))  # Increases the y-axis label size
 text(x = bar_positions, 
      y = c(-53,-99,-99,-99,-99),
      labels = sorted_PIDs, 
      pos = 1,   # Position labels above the bars
-     cex = 1.2, # Adjust the size of the labels
+     cex = 1.8, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
-
-write.csv(c(-53,-99,-99,-99,-99), "data/data_Fig2L.csv", row.names = FALSE)
 
 # now we manually do VAf best % change - read off graphs
 # Supp Fig 2.2U
 pdf("Subfig22Ualt.pdf", width = 8, height = 6)
+par(mar = c(4, 5, 1, 1) + 0.1)
 bar_positions <- barplot(c(-96,-99,-99,-99,-99,-99,-99,-99,-99,-99), 
                          col = colours1, 
                          main = "ARM A", 
-                         cex.axis = 1.5, 
+                         cex.axis = 1.8, 
                          ylab = "Best % Change VAF", 
-                         cex.lab = 1.5,ylim=c(-113,100))  # Increases the y-axis label size
+                         cex.lab = 1.8,ylim=c(-113,100))  # Increases the y-axis label size
 sorted_PIDs <- c(18,3,9,8,1,17,16,15,6,10)
 text(x = bar_positions, 
      y = c(-96,-99,-99,-99,-99,-99,-99,-99,-99,-99), 
      labels = sorted_PIDs, 
      pos = 1,   # Position labels above the bars
-     cex = 1.2, # Adjust the size of the labels
+     cex = 1.8, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
 
-
 # Supp Fig 2.2V
 pdf("Subfig22V.pdf", width = 8, height = 6)
+par(mar = c(4, 5, 1, 1) + 0.1)
 bar_positions <- barplot(c(-99,-85,-99,-99,-99,-99,-99,-99,-99,-99), 
                          col = colours2, 
                          main = "ARM B", 
-                         cex.axis = 1.5, 
+                         cex.axis = 1.8, 
                          ylab = "Best % Change VAF", 
-                         cex.lab = 1.5,ylim=c(-113,100))  # Increases the y-axis label size
+                         cex.lab = 1.8,ylim=c(-113,100))  # Increases the y-axis label size
 sorted_PIDs <- c(11,13,4,21,5,19,20,7,12,14)
 text(x = bar_positions, 
      y = c(-99,-85,-99,-99,-99,-99,-99,-99,-99,-99), 
      labels = sorted_PIDs, 
      pos = 1,   # Position labels above the bars
-     cex = 1.2, # Adjust the size of the labels
+     cex = 1.8, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
-write.csv(c(-99,-85,-99,-99,-99,-99,-99,-99,-99,-99), "data/data_SupFig22V.csv", row.names = FALSE)
-
 
 # Supp Fig 2.2W - read from graph
 pdf("Subfig22W.pdf", width = 8, height = 6)
@@ -898,7 +891,6 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
-write.csv(data22W, "data/data_SupFig22W.csv", row.names = FALSE)
 
 # Supp Fig 2.2X - read from graph
 pdf("Subfig22X.pdf", width = 8, height = 6)
@@ -917,8 +909,6 @@ text(x = bar_positions,
      cex = 1.2, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
-write.csv(data22X, "data/data_SupFig22X.csv", row.names = FALSE)
-
 
 
 
@@ -944,25 +934,22 @@ barplot(b2$BPCH3[is.finite(b2$BPCH3)],ylim=c(-100,25),
         col="#008000",main="ARM B",cex.axis=1.5)
 
 pdf("fig2I.pdf", width = 8, height = 6)
+par(mar = c(4, 5, 1, 1) + 0.1)
 bar_positions <- barplot(sort(b2$BPCH3[is.finite(b2$BPCH3)], decreasing = TRUE), 
                          col = "#3684BC", 
                          main = "", 
-                         cex.axis = 1.5, 
+                         cex.axis = 1.8, 
                          ylab = "Best % Change SLD during TT run-in", 
-                         cex.lab = 1.5,ylim=c(-80,60),yaxt = "n")  # Increases the y-axis label size
-axis(2, at = seq(-80, 60, by = 20), cex.axis = 1.5)
+                         cex.lab = 1.8,ylim=c(-80,60),yaxt = "n")  # Increases the y-axis label size
+axis(2, at = seq(-80, 60, by = 20), cex.axis = 1.8)
 sorted_PIDs <- b2$PID[order(b2$BPCH3[is.finite(b2$BPCH3)], decreasing = TRUE)]
 text(x = bar_positions, 
      y = sort(b2$BPCH3[is.finite(b2$BPCH3)], decreasing = TRUE), 
      labels = sorted_PIDs, 
      pos = 1,   # Position labels above the bars
-     cex = 1.2, # Adjust the size of the labels
+     cex = 1.8, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
-write.csv(b2$BPCH3[is.finite(b2$BPCH3)], "data/data_Fig2I.csv", row.names = FALSE)
-
-
-
 # patient 2 did not have post imaging and patient 11 switched after 2 weeks
 
 # -	Arm B the best percentage change from the scan at switch up to either study end 
@@ -985,25 +972,24 @@ b2<-df1[df1$`Treatment arm`=="02|ARM B",]
 b2<-arrange(b2,BPCH4)
 
 pdf("fig2J.pdf", width = 8, height = 6)
+par(mar = c(4, 5, 1, 1) + 0.1)
 bar_positions <- barplot(sort(b2$BPCH4[is.finite(b2$BPCH4)], decreasing = TRUE), 
                          col = "#3684BC", 
                          main = "", 
-                         cex.axis = 1.5, 
+                         cex.axis = 1.8, 
                          ylab = "Best % Change SLD during CPI", 
-                         cex.lab = 1.5,# Increases the y-axis label size
+                         cex.lab = 1.8,# Increases the y-axis label size
                          ylim=c(-80,60),
                          yaxt = "n")  
-axis(2, at = seq(-80, 60, by = 20), cex.axis = 1.5)
+axis(2, at = seq(-80, 60, by = 20), cex.axis = 1.8)
 sorted_PIDs <- b2$PID[order(b2$BPCH4[is.finite(b2$BPCH4)], decreasing = TRUE)]
 text(x = bar_positions, 
      y = sort(b2$BPCH4[is.finite(b2$BPCH4)], decreasing = TRUE), 
      labels = sorted_PIDs, 
      pos = 1,   # Position labels above the bars
-     cex = 1.2, # Adjust the size of the labels
+     cex = 1.8, # Adjust the size of the labels
      col = "black")  # Color of the labels
 dev.off()
-
-write.csv(b2$BPCH4[is.finite(b2$BPCH4)], "data/data_Fig2J.csv", row.names = FALSE)
 
 df1<-unique(d6[,c("PID","BPCH3","BPCH4","Treatment arm")])
 plot(df1$BPCH3,df1$BPCH4,xlab="Targeted",ylab="IO")
@@ -1011,7 +997,7 @@ abline(a=0,b=1)
 
 # Toxicity #####################################################################
 
-d13<-read.csv("../Data/CSV_export/CAcTUS.Table 13.csv")
+d13<-read.csv("CAcTUS.Table 13.csv")
 colnames(d13)<-d13[1,]
 d13<-d13[-1,]
 
