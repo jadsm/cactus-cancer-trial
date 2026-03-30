@@ -1,3 +1,10 @@
+# =============================================================================
+# Time Series Analysis Script
+# this script performs time series analysis on the ctDNA data from the CAcTUS trial,
+# including linear mixed-effects models to evaluate the relationship between ctDNA
+# biomarkers and tumour burden over time, accounting for repeated measures within patients
+# =============================================================================
+
 require(ggplot2)
 require(survival)
 require(nlme)
