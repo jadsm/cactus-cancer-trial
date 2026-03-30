@@ -13,7 +13,9 @@ The scripts in this repository facilitate the reproduction of survival analyses 
 * `haven` (Importing .dta files)
 * `lubridate` (Date operations)
 * `survival` & `survminer` (Survival analysis and plotting)
-* `epiR` (epidemiological analysis)
+* `epiR` (Epidemiological analysis)
+* `ggplot` (Visualisation)
+* `nmle` (Mixed effects models)
 
 ### Files
 The primary files containing most of the analysis are: 
